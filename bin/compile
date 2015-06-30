@@ -34,13 +34,19 @@ echo "Using perl `perl -e 'print $^V'`" | indent
 
 cd $BUILD_DIR
 
-echo "-----> Installing dependencies"
-cpanm -nq --installdeps . 2>&1 | indent
-if [ ${PIPESTATUS[0]} -ne 0 ]; then cat_build_log; exit 1; fi
+if [ -f $BUILD_DIR/Makefile.PL ] || [ -f $BUILD_DIR/cpanfile ]; then
+  echo "-----> Installing dependencies"
+  VENDOR_DEPS="$BUILD_DIR/vendor/perl-deps"
+  CACHE_DEPS="$CACHE_DIR/$PERL_VERSION/perl-deps"
+  CPANM="perl -S $(which cpanm) -l $CACHE_DEPS"
 
-echo "-----> Installing Starman"
-cpanm -nq Starman 2>&1 | indent
-if [ ${PIPESTATUS[0]} -ne 0 ]; then cat_build_log; exit 1; fi
+  mkdir -p "$CACHE_DIR"
+  $CPANM --notest --installdeps "$BUILD_DIR" 2>&1 | indent
+
+  cp -R "$CACHE_DEPS" "$VENDOR_DEPS"
+
+  echo "Dependencies installed" | indent
+fi
 
 echo "-----> Changing shebang lines"
 change-shebang -f $BUILD_DIR/vendor/bin/* 2>&1 | indent
