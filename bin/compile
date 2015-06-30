@@ -13,8 +13,9 @@ cat_build_log() {
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-PERL_VERSION=5.22.0.0
-PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$PERL_VERSION/perl-x86_64-linux.tar.gz
+PERL_VERSION=5.22.0
+DOWNLOAD_VERSION=5.22.0.0
+PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$DOWNLOAD_VERSION/perl-x86_64-linux.tar.gz
 
 VENDORED_PERL="$BUILD_DIR/vendor/perl"
 
@@ -28,9 +29,6 @@ mkdir -p $VENDORED_PERL && curl -sSL $PERL_PACKAGE | tar xzf - --strip-component
 export PATH="$VENDORED_PERL/bin:$PATH"
 export PERL5LIB="$VENDORED_PERL/lib/$PERL_VERSION:$VENDORED_PERL/lib/site_perl/$PERL_VERSION"
 
-ls $VENDORED_PERL/bin
-echo "#####"
-ls $VENDORED_PERL/lib/site_perl/$PERL_VERSION
 echo "Using perl `perl -e 'print $^V'`" | indent
 
 cd $BUILD_DIR
@@ -47,10 +45,4 @@ if [ -f $BUILD_DIR/Makefile.PL ] || [ -f $BUILD_DIR/cpanfile ]; then
   cp -R "$CACHE_DEPS" "$VENDOR_DEPS"
 
   echo "Dependencies installed" | indent
-fi
-
-if [ -d $BUILD_DIR/vendor ]; then
-  rm -rf $CACHE_DIR/vendor-$PERL_VERSION
-  mkdir -p $CACHE_DIR
-  cp -a $BUILD_DIR/vendor $CACHE_DIR/vendor-$PERL_VERSION
 fi
