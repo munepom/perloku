@@ -21,14 +21,8 @@ VENDORED_PERL="$BUILD_DIR/vendor/perl"
 echo $BUILD_DIR
 echo $CACHE_DIR
 
-rm -rf $BUILD_DIR/vendor
-if [ -d $CACHE_DIR/vendor-$PERL_VERSION ]; then
-  echo "-----> Vendoring Perl (using cache)"
-  mkdir -p $VENDORED_PERL && cp -a $CACHE_DIR/vendor-$PERL_VERSION $VENDORED_PERL
-else
-  echo "-----> Vendoring Perl"
-  mkdir -p $VENDORED_PERL && curl -sSL $PERL_PACKAGE | tar xzf - --strip-components 1 -C $VENDORED_PERL
-fi
+echo "-----> Vendoring Perl"
+mkdir -p $VENDORED_PERL && curl -sSL $PERL_PACKAGE | tar xzf - --strip-components 1 -C $VENDORED_PERL
 
 # Set up so we can use Perl right away
 export PATH="$VENDORED_PERL/bin:$PATH"
