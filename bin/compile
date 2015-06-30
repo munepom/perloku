@@ -8,7 +8,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 
 PERL_VERSION="5.22.0"
-PERL_PACKAGE="perloku.s3.amazonaws.com/perl-$PERL_VERSION.tgz"
+PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$RELEASE_VERSION/perl-x86_64-linux.tar.gz
 
 VENDORED_PERL="$BUILD_DIR/vendor/perl"
 
