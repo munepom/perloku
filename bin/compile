@@ -34,6 +34,9 @@ fi
 export PATH="$VENDORED_PERL/bin:$PATH"
 export PERL5LIB="$VENDORED_PERL/lib/$PERL_VERSION:$VENDORED_PERL/lib/site_perl/$PERL_VERSION"
 
+ls $VENDORED_PERL/bin
+echo "#####"
+ls $VENDORED_PERL/lib/site_perl/$PERL_VERSION
 echo "Using perl `perl -e 'print $^V'`" | indent
 
 cd $BUILD_DIR
