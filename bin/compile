@@ -13,22 +13,26 @@ cat_build_log() {
 BUILD_DIR=$1
 CACHE_DIR=$2
 
-RELEASE_VERSION=5.22.0.0
-PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$RELEASE_VERSION/perl-x86_64-linux.tar.gz
+PERL_VERSION=5.22.0.0
+PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$PERL_VERSION/perl-x86_64-linux.tar.gz
+
+VENDORED_PERL="$BUILD_DIR/vendor/perl"
 
 echo $BUILD_DIR
 echo $CACHE_DIR
 
 rm -rf $BUILD_DIR/vendor
-if [ -d $CACHE_DIR/vendor-$RELEASE_VERSION ]; then
+if [ -d $CACHE_DIR/vendor-$PERL_VERSION ]; then
   echo "-----> Vendoring Perl (using cache)"
-  cp -a $CACHE_DIR/vendor-$RELEASE_VERSION $BUILD_DIR/vendor
+  cp -a $CACHE_DIR/vendor-$PERL_VERSION $BUILD_DIR/vendor
 else
   echo "-----> Vendoring Perl"
-  mkdir -p $BUILD_DIR/vendor && curl -sSL $PERL_PACKAGE | tar xzf - --strip-components 1 -C $BUILD_DIR/vendor
+  mkdir -p $VENDORED_PERL && curl -sSL $PERL_PACKAGE | tar xzf - --strip-components 1 -C $VENDORED_PERL
 fi
 
-export PATH="$BUILD_DIR/vendor/bin:$PATH"
+# Set up so we can use Perl right away
+export PATH="$VENDORED_PERL/bin:$PATH"
+export PERL5LIB="$VENDORED_PERL/lib/$PERL_VERSION:$VENDORED_PERL/lib/site_perl/$PERL_VERSION"
 
 echo "Using perl `perl -e 'print $^V'`" | indent
 
@@ -48,11 +52,8 @@ if [ -f $BUILD_DIR/Makefile.PL ] || [ -f $BUILD_DIR/cpanfile ]; then
   echo "Dependencies installed" | indent
 fi
 
-echo "-----> Changing shebang lines"
-change-shebang -f $BUILD_DIR/vendor/bin/* 2>&1 | indent
-
 if [ -d $BUILD_DIR/vendor ]; then
-  rm -rf $CACHE_DIR/vendor-$RELEASE_VERSION
+  rm -rf $CACHE_DIR/vendor-$PERL_VERSION
   mkdir -p $CACHE_DIR
-  cp -a $BUILD_DIR/vendor $CACHE_DIR/vendor-$RELEASE_VERSION
+  cp -a $BUILD_DIR/vendor $CACHE_DIR/vendor-$PERL_VERSION
 fi
