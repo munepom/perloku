@@ -16,6 +16,8 @@ CACHE_DIR=$2
 RELEASE_VERSION=5.22.0.0
 PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$RELEASE_VERSION/perl-x86_64-linux.tar.gz
 
+echo $BUILD_DIR
+
 rm -rf $BUILD_DIR/vendor
 if [ -d $CACHE_DIR/vendor-$RELEASE_VERSION ]; then
   echo "-----> Vendoring Perl (using cache)"
