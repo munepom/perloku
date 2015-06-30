@@ -19,8 +19,11 @@ PERL_PACKAGE=https://github.com/shoichikaji/relocatable-perl/releases/download/$
 
 VENDORED_PERL="$BUILD_DIR/vendor/perl"
 
-echo $BUILD_DIR
-echo $CACHE_DIR
+### /tmp/build_7825672acf4176dfc83512c13d625563
+# echo $BUILD_DIR
+
+### /app/tmp/cache
+# echo $CACHE_DIR
 
 echo "-----> Vendoring Perl"
 mkdir -p $VENDORED_PERL && curl -sSL $PERL_PACKAGE | tar xzf - --strip-components 1 -C $VENDORED_PERL
