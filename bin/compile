@@ -36,13 +36,11 @@ ls $VENDORED_PERL
 
 echo "Using perl `perl -e 'print $^V'`" | indent
 
-cd $BUILD_DIR
-
 if [ -f $BUILD_DIR/Makefile.PL ] || [ -f $BUILD_DIR/cpanfile ]; then
   echo "-----> Installing dependencies"
   VENDOR_DEPS="$BUILD_DIR/vendor/perl-deps"
   CACHE_DEPS="$CACHE_DIR/$PERL_VERSION/perl-deps"
-  CPANM="cpanm -l $CACHE_DEPS"
+  CPANM="perl -S $(which cpanm) -l $CACHE_DEPS"
 
   mkdir -p "$CACHE_DIR"
   $CPANM --notest --installdeps "$BUILD_DIR" 2>&1 | indent
