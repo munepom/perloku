@@ -40,6 +40,12 @@ if [ -f $BUILD_DIR/Makefile.PL ] || [ -f $BUILD_DIR/cpanfile ]; then
   echo "-----> Installing dependencies"
   VENDOR_DEPS="$BUILD_DIR/vendor/perl-deps"
   CACHE_DEPS="$CACHE_DIR/$PERL_VERSION/perl-deps"
+
+  # install cpanm and local::lib
+  CPANM_URL="http://cpanmin.us"
+  curl -L $CPANM_URL | perl - --self-upgrade
+  cpanm local::lib
+
   CPANM="cpanm -l $CACHE_DEPS"
 
   mkdir -p "$CACHE_DIR"
